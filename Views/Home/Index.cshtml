@@ -1,0 +1,115 @@
+﻿@model List<blog>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .blog-types {
+            flex: 0 0 200px;
+            margin-right: 20px;
+        }
+
+            .blog-types h3 {
+                margin-top: 0;
+            }
+
+            .blog-types ul {
+                list-style-type: none;
+                padding: 0;
+            }
+
+            .blog-types li {
+                cursor: pointer;
+                padding: 8px 0;
+                transition: background-color 0.3s;
+            }
+
+                .blog-types li:hover {
+                    background-color: aqua;
+                }
+
+        .blog-list {
+            flex: 1 0 600px;
+        }
+
+        .blog-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+        }
+
+            .blog-item h3 {
+                margin: 0;
+                font-size: 20px;
+            }
+
+            .blog-item p {
+                margin: 8px 0;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="blog-types">
+            <h3>Blog Types</h3>
+            <ul>
+                <li class="blog-type" data-blogtype="">All</li>
+                @foreach (var blogType in ViewBag.BlogTypes)
+                {
+                    <li class="blog-type" data-blogtype="@blogType">@blogType</li>
+                }
+            </ul>
+        </div>
+
+        <div class="blog-list" id="blog-list">
+            @foreach (var blog in Model)
+            {
+                <div class="blog-item">
+                    <h3>@blog.Title</h3>
+                    <p>Blog Type: @blog.BlogType</p>
+                    <p>@blog.Content</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $(".blog-type").click(function () {
+                var blogType = $(this).data("blogtype");
+                filterBlogs(blogType);
+            });
+        });
+
+        function filterBlogs(blogType) {
+            $.ajax({
+                url: '@Url.Action("GetFilteredBlogs", "Home")',
+                type: 'GET',
+                data: { blogType: blogType },
+                success: function (result) {
+                    $("#blog-list").html(result);
+                },
+
+            });
+        }
+    </script>
+</body>
+</html>

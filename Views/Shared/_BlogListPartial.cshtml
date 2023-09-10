@@ -1,0 +1,10 @@
+﻿@model List<blog>
+
+@foreach (var blog in Model)
+{
+    <div class="blog-item">
+        <h3>@blog.Title</h3>
+        <p>Blog Type: @blog.BlogType</p>
+        <p>@blog.Content</p>
+    </div>
+}
